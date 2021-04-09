@@ -27,18 +27,7 @@ workflows:
           ionic cordova platform remove android --nosave
           ionic cordova platform add android --confirm --no-interactive --noresources          
       - name: Build Android Cordova App
-        script: ionic cordova build android --release --no-interactive --prod --device
-      - name: Sign APK
-        script: |
-          echo $FCI_KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH
-          APK_PATH=$(find platforms/android/app/build/outputs/apk/release -name "*.apk" | head -1)
-          jarsigner \
-            -sigalg SHA1withRSA \
-            -digestalg SHA1 \
-            -keystore $FCI_KEYSTORE_PATH \
-            -storepass $FCI_KEYSTORE_PASSWORD \
-            -keypass $FCI_KEY_PASSWORD \
-            $APK_PATH $FCI_KEY_ALIAS          
+        script: ionic cordova build android --release --no-interactive --prod --device   
     artifacts:
       - platforms/android/app/build/outputs/**/*.apk
     publishing:
