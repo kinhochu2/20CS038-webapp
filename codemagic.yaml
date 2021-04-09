@@ -23,7 +23,7 @@ workflows:
       - name: Setup Cordova Android platform
         script: |
           ionic cordova platform remove android --nosave
-          ionic cordova platform add android --confirm --no-interactive --noresources          
+          ionic cordova platform add android@8.0.0 --confirm --no-interactive --noresources          
       - name: Build Android Cordova App
         script: |
           ionic cordova prepare android
