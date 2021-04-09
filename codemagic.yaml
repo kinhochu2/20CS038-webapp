@@ -23,8 +23,8 @@ workflows:
           npm i -g cordova@7.1.0
       - name: Setup Cordova Android platform
         script: |
-          ionic cordova platform remove android --nosave
-          ionic cordova platform add android --confirm --no-interactive --noresources          
+          sudo ionic cordova platform remove android --nosave
+          sudo ionic cordova platform add android@6.3.0 --confirm --no-interactive --noresources          
       - name: Build Android Cordova App
         script: |
           ionic cordova prepare android
