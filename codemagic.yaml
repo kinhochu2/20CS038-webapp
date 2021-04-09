@@ -1,0 +1,60 @@
+workflows:
+  ionic-cordova-android-workflow:
+    name: Ionic Cordova Android Workflow
+    max_build_duration: 120
+    instance_type: mac_mini
+    environment:
+      vars:
+        # Android Keystore environment variables
+        FCI_KEYSTORE: Encrypted(...) # <-- Put your encrypted keystore file here
+        FCI_KEYSTORE_PASSWORD: Encrypted(...) # <-- Put your encrypted keystore password here
+        FCI_KEY_PASSWORD: Encrypted(...) # <-- Put your encrypted keystore alias password here
+        FCI_KEY_ALIAS: Encrypted(...) # <-- Put your encrypted keystore alias username here
+        FCI_KEYSTORE_PATH: /tmp/keystore.keystore
+      node: latest
+    triggering:
+      events:
+        - push
+        - tag
+        - pull_request
+      branch_patterns:
+        - pattern: develop
+          include: true
+          source: true
+    scripts:
+      - name: Install npm dependencies for Ionic Cordova project and update to Cordova version 7.1.0
+        script: |
+          npm ci # equivalent of npm install for CI systems. Requires package-lock.json or npm-shrinkwrap.json to be present
+          cvm install 7.1.0
+          cvm use 7.1.0          
+      - name: Setup Cordova Android platform
+        script: |
+          ionic cordova platform remove android --nosave
+          ionic cordova platform add android --confirm --no-interactive --noresources          
+      - name: Build Android Cordova App
+        script: ionic cordova build android --release --no-interactive --prod --device
+      - name: Sign APK
+        script: |
+          echo $FCI_KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH
+          APK_PATH=$(find platforms/android/app/build/outputs/apk/release -name "*.apk" | head -1)
+          jarsigner \
+            -sigalg SHA1withRSA \
+            -digestalg SHA1 \
+            -keystore $FCI_KEYSTORE_PATH \
+            -storepass $FCI_KEYSTORE_PASSWORD \
+            -keypass $FCI_KEY_PASSWORD \
+            $APK_PATH $FCI_KEY_ALIAS          
+    artifacts:
+      - platforms/android/app/build/outputs/**/*.apk
+    publishing:
+      google_play:
+        credentials: Encrypted(...) # <- Put your encrypted JSON key file for Google Play service account
+        track: internal
+      email:
+        recipients:
+          - kinson6030@gmail.com
+          - kinhochu2-c@ad.cityu.edu.hk
+          - kinhochu2-c@my.cityu.edu.hk
+        notify:
+          success: true     # To not receive a notification when a build succeeds
+          failure: false     # To not receive a notification when a build fails
