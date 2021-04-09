@@ -5,12 +5,6 @@ workflows:
     instance_type: mac_mini
     environment:
       vars:
-        # Android Keystore environment variables
-        FCI_KEYSTORE: Encrypted(...) # <-- Put your encrypted keystore file here
-        FCI_KEYSTORE_PASSWORD: Encrypted(...) # <-- Put your encrypted keystore password here
-        FCI_KEY_PASSWORD: Encrypted(...) # <-- Put your encrypted keystore alias password here
-        FCI_KEY_ALIAS: Encrypted(...) # <-- Put your encrypted keystore alias username here
-        FCI_KEYSTORE_PATH: /tmp/keystore.keystore
       node: latest
     triggering:
       events:
