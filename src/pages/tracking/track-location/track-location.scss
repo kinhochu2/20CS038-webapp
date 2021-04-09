@@ -1,0 +1,15 @@
+page-track-location {
+  #map {
+    height: 500px;
+  }
+
+  ion-content{
+    button {
+      margin: 10px;
+      height: auto;
+      border: 2.5pt solid;
+      border-radius: 0px;
+      width: 200px;
+    }
+  }
+}

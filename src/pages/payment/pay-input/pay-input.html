@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-navbar text-center>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Pay</ion-title>
+  </ion-navbar>
+  <div class="balance">
+    <span>Current Balance:</span>
+    <span>100 ETH</span><br><span>=    2000.34 HKD</span>
+  </div>
+</ion-header>
+
+<ion-content padding>
+  <div class="recipient">
+    <ion-label>Recipient:</ion-label>
+    <div class="searchbar">
+      <ion-icon name="search" class="icon-blue" id="search"></ion-icon>
+      <div class="input">
+        <ion-input type="text" placeholder="Enter public address (0x)"></ion-input>
+      </div>
+      <ion-icon name="qr-scanner" class="icon-blue" id="scan" (click)="scan()"></ion-icon>
+    </div>
+  </div>
+  <div class="amount">
+    <ion-label>Amount:</ion-label>
+    <span (click)="amountClicked()"><u>{{amount}}</u></span><span id="eth">ETH</span>
+    <br>
+    <span>= 567.89 HKD</span>
+  </div>
+  <button class="button-white" id="next" (click)="next()">
+    Next
+  </button>
+  <div [ngClass]="{'padding-bottom': openKeypad}">
+
+  </div>
+
+</ion-content>
+<ion-footer>
+  <div *ngIf="openKeypad">
+    <ion-digit-keyboard
+    [align]="keyboardSettings.align"
+    [width]="keyboardSettings.width"
+    [visible]="keyboardSettings.visible"
+    [leftActionOptions]="keyboardSettings.leftActionOptions"
+    [rightActionOptions]="keyboardSettings.rightActionOptions"
+    [roundButtons]="keyboardSettings.roundButtons"
+    [showLetters]="keyboardSettings.showLetters"
+    [swipeToHide]="keyboardSettings.swipeToHide"
+    [theme]="keyboardSettings.theme"
+    (buttonClick)="onKeyboardButtonClick()"
+    >
+    </ion-digit-keyboard>
+  </div>
+</ion-footer>

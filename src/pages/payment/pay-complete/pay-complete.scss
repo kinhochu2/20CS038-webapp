@@ -1,0 +1,21 @@
+page-pay-complete {
+  ion-content {
+    .main-container {
+      color: #47525E;
+      text-align: center;
+      ion-icon {
+        margin-top: 150px;
+        font-size: 100px;
+      }
+      ion-label, span {
+        font-size: 25px;
+      }
+      button {
+        margin-top: 120px;
+        font-size: 24.5px;
+        width: 73%;
+        line-height: 50px;
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>create-response</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form (ngSubmit)="createResponse()">
+    <ion-item>
+      <ion-label>Witness address</ion-label>
+      <ion-label>{{ userAcc.getAddress() }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Witness Lat:</ion-label>
+      <ion-label>{{ witnessLat }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Witness Lng:</ion-label>
+      <ion-label>{{ witnessLng }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Prover addres:</ion-label>
+      <ion-label>{{ proverAddr }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Prover Lat:</ion-label>
+      <ion-label>{{ proverLat }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Prover Lng:</ion-label>
+      <ion-label>{{ proverLng }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Timestamp:</ion-label>
+      <ion-label>{{ timestamp }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Please enter your password for verification:</ion-label>
+      <ion-input type="password" [(ngModel)]="password" name="password"></ion-input>
+    </ion-item>
+    <button ion-button type="submit" class="submit" block>Add your response</button>
+  </form>
+</ion-content>

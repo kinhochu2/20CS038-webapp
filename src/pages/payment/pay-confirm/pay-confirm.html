@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-navbar text-center>
+    <ion-title>Pay</ion-title>
+  </ion-navbar>
+  <div class="balance">
+    <span>Current Balance:</span>
+    <span>100 ETH</span><br><span>=    2000.34 HKD</span>
+  </div>
+</ion-header>
+
+<ion-content padding>
+  <div class="recipient">
+    <ion-label>Recipient:</ion-label>
+    <ion-label><u>0x123421iuhd9wq29djwthe0jd021e</u></ion-label>
+  </div>
+  <div class="amount">
+    <ion-label>Amount:</ion-label>
+    <span><u>12.34</u></span><span id="eth">ETH</span>
+    <br>
+    <span>= 567.89 HKD</span>
+  </div>
+  <button class="button-white" id="next" (click)="back()">
+    Cancel
+  </button>
+  <button class="button-white" id="next" (click)="confirm()">
+    Confirm
+  </button>
+
+</ion-content>
+

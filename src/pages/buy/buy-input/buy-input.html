@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Buy-input</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list *ngFor="let item of items">
+    <div class="item-list">
+      <div class="item-info1">
+        <ion-label>Name: {{item.name}}</ion-label>
+        <ion-label>Price: {{item.price}}</ion-label>
+      </div>
+      <div class="item-info2">
+        <ion-label text-wrap>Seller: {{sliceStr(item.seller)}}</ion-label>
+        <ion-label text-wrap>Ship From: {{item.sellerLocation}}</ion-label>
+      </div>
+
+    </div>
+    <div class="item-list2">
+      <div class="purchase-info">
+        <ion-label>Please select the purchase amount:</ion-label>
+        <ion-input type="number" [(ngModel)]="item.amount" min="1"></ion-input>
+      </div>
+      <button class="button-white" type="submit" (click)="buyItem(item)">
+        Buy
+      </button>
+    </div>
+    <div class="line-break"></div>
+  </ion-list>
+  <div class="add" (click)="addItem()">
+    <ion-icon name="add" class="icon-white"></ion-icon>
+  </div>
+</ion-content>

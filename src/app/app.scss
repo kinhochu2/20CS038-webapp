@@ -1,0 +1,111 @@
+// http://ionicframework.com/docs/theming/
+
+
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+@import "../theme/icons";
+@font-face {
+  font-family: Sensei;
+  src: url('../assets/fonts/Sensei-Medium.otf');
+}
+@font-face {
+  font-family: Bree-serif;
+  src: url('../assets/fonts/BreeSerif-Regular.otf');
+}
+@font-face {
+  font-family: Roboto;
+  src: url('../assets/fonts/Roboto-Light.ttf');
+}
+
+ion-menu > .menu-inner > ion-content, .list > .item {
+  overflow: hidden;
+  background-color: #1D3F53;
+  color: #FFFFFF;
+  font-size: 21pt;
+  line-break: 8pt;
+}
+ion-header.sidemenu-header {
+  background-color: #1D3F53 !important;
+  .toolbar-background {
+    background-color: #1D3F53 !important;
+  }
+}
+ion-header, .toolbar-background {
+  background-color: #295873;
+  ion-label {
+    color: white;
+    margin-top: 30px;
+    text-align: center;
+    font-size: 7em;
+  }
+  .bar-button {
+    color: white;
+  }
+}
+ion-title {
+  text-align: center;
+  .toolbar-title {
+    color: #FFFFFF;
+    font-family: Bree-serif;
+  }
+}
+.bar-buttons > .button-inner > .icon{
+  font-size: 50px;
+}
+.light-blue-bg {
+  background-color: #295873;
+}
+.dark-blue-bg {
+  background-color: #1D3F53;
+}
+.icon-white {
+  color: #ffffff;
+}
+.icon-blue {
+  color: #295873;
+}
+button {
+  border-radius: 100px;
+  border-width: 4px;
+  border-style: solid;
+  padding: 10px;
+}
+span, ion-label, button {
+  font-family: Bree-serif;
+}
+.font-sensei {
+  font-family: Sensei;
+}
+.button-white {
+  background-color: #ffffff;
+  border-color: #1D3F53;
+  border-radius: 50pt;
+  color: #295873;
+}
+.button-blue {
+  background-color: #295873;
+  border-color: 10px #FFFFFF;
+  border-radius: 50pt;
+  color: #FFFFFF;
+}
+.label-blue {
+  color:#295873;
+}
+.label-white {
+  color: #FFFFFF;
+}
+.errMsg {
+  text-align: center;
+  color: red;
+}

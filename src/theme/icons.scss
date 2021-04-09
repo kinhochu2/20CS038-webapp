@@ -1,0 +1,23 @@
+ion-icon {
+  &[class*="custom-"] {
+    mask-size: contain;
+    mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    background: currentColor;
+    width: 1em;
+    height: 1em;
+  }
+  // usage:<ion-icon name="crytoPay"></ion-icon>
+  &[class*="return"] {
+    mask-image: url(../assets/icons/icons8-return-80.svg);
+    src: url(../assets/icons/icons8-return-80.svg);
+  }
+  &[class*="advance"] {
+    mask-image: url(../assets/icons/icons8-advance-80.svg);
+    src: url(../assets/icons/icons8-advance-80.svg);
+  }
+  &[class*="reload"] {
+    mask-image: url(../assets/icons/icons8-rotate-80.svg);
+    src: url(../assets/icons/icons8-rotate-80.svg);
+  }
+}

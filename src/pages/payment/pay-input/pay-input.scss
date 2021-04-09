@@ -1,0 +1,76 @@
+page-pay-input {
+  ion-header {
+    .balance {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      text-align: center;
+      span{
+        color: white;
+        font-size: 30px;
+      }
+    }
+  }
+
+  ion-content {
+    text-align: center;
+    ion-label, span{
+      color: #47525E;
+    }
+    span {
+      font-size: 30px;
+      padding-left: 20px;
+    }
+    ion-label {
+      font-size: 25px;
+    }
+    span>u {
+      font-size: 55pt;
+    }
+    .padding-bottom {
+      padding-bottom: 300px;
+    }
+    #next {
+      margin-top: 50px;
+      width: 50%;
+      line-height: 50px;
+      font-size: 26.5px;
+    }
+    .amount {
+      margin-top: 20px;
+    }
+  }
+  .searchbar {
+    border: 3pt solid;
+    border-color: #295873;
+    height: 60pt;
+    border-radius: 50pt;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    ion-icon {
+      font-size: 30px;
+      flex: 5% 0 0;
+      &#search {
+        margin-left: 20px;
+        margin-right: 2px;
+      }
+      &#scan {
+        margin-left: 2px;
+        flex: 1;
+      }
+    }
+    .input {
+      flex: 73% 0 0;
+      background-color: #E5E9F2;
+      color: #295873;
+      border-radius: 50pt;
+      padding: 0 5px;
+      ion-input {
+        font-size: 15px;
+      }
+    }
+  }
+
+
+
+}

@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+  </ion-navbar>
+  <ion-label class="label-white">Your current balance:</ion-label>
+  <ion-label class="label-white"><u>{{balance}} ETH</u></ion-label>
+</ion-header>
+<ion-content padding>
+  <ion-label class="label-blue">Your address:</ion-label>
+  <div class="user-info">
+    <span id="name" class="label-blue" text-wrap><u>{{sliceStr(userAcc.getAddress())}}</u></span>
+    <ion-icon name="clipboard" class="icon-blue" (click)="copy()"></ion-icon>
+    <ion-icon name="qr-scanner" class="icon-blue" (click)="scan()"></ion-icon>
+  </div>
+  <div class="buttons">
+    <div class="main-button button-white" (click)="goToPage('BuyInputPage')">
+      <ion-icon name="pricetag"></ion-icon>
+      <ion-label class="label-blue">Buy</ion-label>
+    </div>
+    <div class="main-button button-white" (click)="goToPage('UserRoleSelectPage')">
+      <ion-icon name="cube"></ion-icon>
+      <ion-label class="label-blue">Track</ion-label>
+    </div>
+  </div>
+</ion-content>

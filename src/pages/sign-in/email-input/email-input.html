@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-label class="font-sensei">Welcome to EthsyShip</ion-label>
+</ion-header>
+<ion-content class="light-blue-bg">
+  <div class="container">
+    <ion-label>Please type in your email address and password</ion-label>
+    <div class="inputs">
+      <div id="email">
+        <ion-label>Email:</ion-label>
+        <ion-item class="rounded">
+          <ion-input type="email" [(ngModel)]="email"></ion-input>
+        </ion-item>
+      </div>
+      <div id="password">
+        <ion-label>Password:</ion-label>
+        <ion-item class="rounded">
+          <ion-input type="password" [(ngModel)]="password"></ion-input>
+        </ion-item>
+      </div>
+      <div id="location">
+        <ion-label>Your default location to ship and receive items (if register):</ion-label>
+        <ion-item class="rounded">
+          <ion-input type="text" [(ngModel)]="location"></ion-input>
+        </ion-item>
+      </div>
+    </div>
+    <div class="errMsg">
+      <ion-label>{{errMsg}}</ion-label>
+    </div>
+    <div class="navigation">
+      <button class="button-white" (click)="signIn()">Login/Register</button>
+    </div>
+  </div>
+</ion-content>

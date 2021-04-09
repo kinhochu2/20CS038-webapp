@@ -1,0 +1,49 @@
+page-buy-input {
+  .add {
+    position: absolute;
+    background-color: #295873;
+    border-radius: 100%;
+    width: 45px;
+    height: 45px;
+    padding: 8px 7px 0px 15px;
+    bottom: 50px;
+    right: 50px;
+    ion-icon {
+      font-size: 28px;
+    }
+  }
+  .item-list {
+    display: flex;
+    flex-direction: row;
+    border-color: black;
+    border-width: 5px;
+    color: #295873;
+    padding: 20px;
+    .item-info1 {
+      flex: 50% 0 0;
+    }
+    .item-info2 {
+      flex: 1;
+    }
+  }
+  .item-list2 {
+    display: flex;
+    flex-direction: row;
+    border-color: black;
+    border-width: 5px;
+    color: #295873;
+    padding: 20px;
+    .purchase-info {
+      flex: 70% 0 0;
+    }
+    button {
+      width: 200px;
+      font-size: 30px;
+    }
+  }
+  .line-break {
+    display: block;
+    height: 2px;
+    background-color: #1D3F53;
+  }
+}

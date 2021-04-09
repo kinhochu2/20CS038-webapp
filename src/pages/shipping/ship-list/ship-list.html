@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Ship-List</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ng-container *ngIf="itemCount>0">
+  <ion-list *ngFor="let item of items">
+    <div class="item-list">
+      <div class="item-info1">
+        <ion-label>Name: {{item.name}}</ion-label>
+        <ion-label>Price: {{item.price}}</ion-label>
+        <ion-label>Amount: {{item.amount}}</ion-label>
+      </div>
+      <div class="item-info2">
+        <ion-label text-wrap>Buyer: {{sliceStr(item.buyer)}}</ion-label>
+        <ion-label>Ship To: {{item.buyerLocation}}</ion-label>
+      </div>
+    </div>
+    <!-- <button class="button-white" type="submit" (click)="ship(item)"> -->
+    <button class="button-white" type="submit" (click)="ship()">
+      Start Shipping
+    </button>
+    <div class="line-break"></div>
+  </ion-list>
+  </ng-container>
+</ion-content>

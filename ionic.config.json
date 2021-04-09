@@ -1,0 +1,7 @@
+{
+  "name": "EthsyShip",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}

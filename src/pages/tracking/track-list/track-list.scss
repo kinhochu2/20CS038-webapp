@@ -1,0 +1,30 @@
+page-track-list {
+  .item-list {
+    display: flex;
+    flex-direction: row;
+    border-color: black;
+    border-width: 5px;
+    color: #295873;
+    padding: 20px;
+    .item-info1 {
+      flex: 45% 0 0;
+    }
+    .item-info2 {
+      flex: 1;
+    }
+  }
+  ion-content{
+    button {
+      width: 200px;
+      font-size: 30px;
+      margin-bottom: 20px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .line-break {
+      display: block;
+      height: 2px;
+      background-color: #1D3F53;
+    }
+  }
+}

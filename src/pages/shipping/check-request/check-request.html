@@ -1,0 +1,35 @@
+<!--
+  Generated template for the CheckRequestPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>check-request</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-input type="text" [(ngModel)]="encodedData"></ion-input>
+  <button class="button-white">Show QR code</button>
+  <form (ngSubmit)="broadcastRequest()">
+    <ion-item>
+      <ion-label>Prover address</ion-label>
+      <ion-label>{{ request.prover }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Prover Lat:</ion-label>
+      <ion-label>{{ request.proverLat }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Prover Lng:</ion-label>
+      <ion-label>{{ request.proverLng }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Request Hash Code:</ion-label>
+      <ion-label>{{ request.hx }}</ion-label>
+    </ion-item>
+    <button ion-button type="submit" class="submit" block>Finish and broadcast your request</button>
+  </form>
+</ion-content>
