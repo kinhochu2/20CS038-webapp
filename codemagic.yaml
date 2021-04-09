@@ -1,8 +1,7 @@
 workflows:
   ionic-cordova-android-workflow:
     name: Ionic Cordova Android Workflow
-    max_build_duration: 120
-    instance_type: mac_mini
+    max_build_duration: 240
     environment:
       vars:
         PUBLIC_ENV_VAR: "value here"
@@ -30,15 +29,3 @@ workflows:
         script: ionic cordova build android --release --no-interactive --prod --device   
     artifacts:
       - platforms/android/app/build/outputs/**/*.apk
-    publishing:
-      google_play:
-        credentials: Encrypted(...) # <- Put your encrypted JSON key file for Google Play service account
-        track: internal
-      email:
-        recipients:
-          - kinson6030@gmail.com
-          - kinhochu2-c@ad.cityu.edu.hk
-          - kinhochu2-c@my.cityu.edu.hk
-        notify:
-          success: true     # To not receive a notification when a build succeeds
-          failure: false     # To not receive a notification when a build fails
