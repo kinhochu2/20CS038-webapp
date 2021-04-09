@@ -5,6 +5,7 @@ workflows:
     instance_type: mac_mini
     environment:
       vars:
+        PUBLIC_ENV_VAR: "value here"
       node: latest
     triggering:
       events:
