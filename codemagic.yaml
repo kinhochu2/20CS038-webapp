@@ -19,12 +19,11 @@ workflows:
       - name: Install npm dependencies for Ionic Cordova project and update to Cordova version 7.1.0
         script: |
           npm ci # equivalent of npm install for CI systems. Requires package-lock.json or npm-shrinkwrap.json to be present
-          npm i -g ionic@5.4.16
-          npm i -g cordova@7.1.0
+          npm i -g cordova@9.0.0
       - name: Setup Cordova Android platform
         script: |
-          sudo ionic cordova platform remove android --nosave
-          sudo ionic cordova platform add android@6.3.0 --confirm --no-interactive --noresources          
+          ionic cordova platform remove android --nosave
+          ionic cordova platform add android --confirm --no-interactive --noresources          
       - name: Build Android Cordova App
         script: |
           ionic cordova prepare android
