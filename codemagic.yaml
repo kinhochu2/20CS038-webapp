@@ -23,9 +23,9 @@ workflows:
       - name: Setup Cordova Android platform
         script: |
           ionic cordova platform remove android --nosave
-      - name: Test and build the npm package
+      - name: Build the npm package
         script: |
-          npm run test
+          npm build
       - name: Run on Browser
         script: |
           ionic serve
