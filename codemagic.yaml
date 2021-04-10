@@ -23,8 +23,5 @@ workflows:
       - name: Setup Cordova Android platform
         script: |
           ionic cordova platform remove android --nosave
-      - name: Run on Browser
-        script: |
-          ionic serve
     artifacts:
       - platforms/android/app/build/outputs/**/*.apk
