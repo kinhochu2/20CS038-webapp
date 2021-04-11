@@ -10,6 +10,10 @@ type GetBalanceResult = {
   balance: number;
 }
 
+type ScanResult = {
+  requestId: string;
+}
+
 @IonicPage()
 @Component({
   selector: 'page-home',
@@ -43,6 +47,7 @@ export class HomePage {
   }
 
   scan() {
+    let retval: ScanResult;
     this.scanner.scan({
       prompt: "Please scan the QR code.",
       preferFrontCamera: false,
@@ -51,9 +56,11 @@ export class HomePage {
       disableSuccessBeep: false
     }).then(data => {
       if(!!data)
-        this.navCtrl.push('CreateResponsePage', {
-          "requestId": data
-        });
+        retval = JSON.parse(JSON.stringify(data));
+        if(!!retval.requestId)
+          this.navCtrl.push('CreateResponsePage', {
+            "requestId": data
+          });
     })
   }
 

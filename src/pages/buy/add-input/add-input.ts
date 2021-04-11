@@ -24,6 +24,16 @@ export class AddInputPage {
   }
 
   addItem() {
+    if(this.item.price < 0){
+      const alert = this.alertCtrl.create({
+        cssClass: 'alertClass',
+        subTitle: 'The item price cannot be less than zero.',
+        buttons: ['OK']
+      })
+      alert.present();
+      return;
+    }
+
     let seller = this.userAcc.getAddress();
     this.item.sellerLocation = this.userAcc.getToLocation();
     this.marketService.addItem(this.item, seller)

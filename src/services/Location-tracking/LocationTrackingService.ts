@@ -159,8 +159,8 @@ export class LocationTrackingService {
   });
   }
 
-  addWaypointToRoute(shipmentId, name1, name2, name3, count) {
-    let data = "shipmentId="+shipmentId+"&name1="+name1+"&name2="+name2+"&name3="+name3+"&count="+count;
+  addWaypointToRoute(shipmentId, name1, name2, name3, count, start, end, mph) {
+    let data = "shipmentId="+shipmentId+"&name1="+name1+"&name2="+name2+"&name3="+name3+"&count="+count+"&start="+start+"&end="+end+"&mph="+mph;
     return this.httpProvider.postRequest("tracking/addwaypoints",data);
   }
 
@@ -174,7 +174,8 @@ export class LocationTrackingService {
   }
 
   geocoding(location) {
-    return this.httpProvider.getMapQuestOpenAPI("geocoding/v1/address?key="+MapQuestKey+"&location="+location);
+    let data = "location="+location;
+    return this.httpProvider.postRequest("tracking/geocoding", data);
   }
 
   updateLocation(lat, lng) {

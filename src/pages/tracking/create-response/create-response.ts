@@ -2,7 +2,7 @@ import { ProofService } from './../../../services/proof/ProofService';
 import { LocationTrackingService } from './../../../services/Location-tracking/LocationTrackingService';
 import { UserAccount } from './../../../config/UserAccount';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 type LoadRequestDetailsResult = {
   proverLat: string;
@@ -31,7 +31,7 @@ export class CreateResponsePage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     protected userAcc: UserAccount, private locationServ: LocationTrackingService,
-    private proofService: ProofService) {
+    private proofService: ProofService, private alertCtrl: AlertController) {
   }
 
   ionViewDidLoad() {
@@ -67,6 +67,15 @@ export class CreateResponsePage {
   }
 
   createResponse() {
+    if(this.password != this.userAcc.getPassword()){
+      const alert = this.alertCtrl.create({
+        cssClass: 'alertClass',
+        subTitle: 'The item amount cannot be less than one.',
+        buttons: ['OK']
+      })
+      alert.present();
+      return;
+    }
     this.proofService.addResponse(this.requestId, this.shipmentId, this.witnessLat, this.witnessLng, this.userAcc.getAddress(), this.password)
     .subscribe(
       (val) => {

@@ -29,6 +29,16 @@ export class BuyConfirmPage {
     this.afterBalnce = this.balance - (this.item.price * this.item.amount);
     console.log("this.item.seller: "+this.item.seller);
     console.log("this.item.sellerLocation: "+this.item.sellerLocation)
+
+    if(this.afterBalnce<0) {
+      const alert = this.alertCtrl.create({
+        cssClass: 'alertClass',
+        subTitle: 'Your wallet balance is not enough!',
+        buttons: ['OK']
+      })
+      alert.present();
+      this.navCtrl.setRoot("HomePage");
+    }
   }
 
   confirm() {

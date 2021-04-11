@@ -1,22 +1,30 @@
+import { PayCompletePage } from './../../payment/pay-complete/pay-complete';
 import { Route } from '../../../model/Route';
-import { Item } from '../../../model/ItemList';
-import { LocationTrackingService } from '../../../services/Location-tracking/LocationTrackingService';
+import { Item } from './../../../model/ItemList';
+import { LocationTrackingService } from './../../../services/Location-tracking/LocationTrackingService';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { UserAccount } from '../../../config/UserAccount';
 
-interface FindWaypointResult {
+type FindWaypointResult = {
   waypoints: [{
     name: string;
     lat: number;
     lng: number;
   }];
   count: number;
-  distance: number;
 }
 
 type AddWaypointToRouteResult = {
+  distance: string;
+  time: string;
+  eta: string;
   hasError: boolean;
+}
+
+type GeocodingResult = {
+  lat: number;
+  lng: number;
 }
 
 @IonicPage()
@@ -26,8 +34,9 @@ type AddWaypointToRouteResult = {
 })
 export class ResetRoutePage {
 
-  protected item: Item;
+  protected item: Item = new Item();
   waypoint: Array<string> = new Array<string>();
+  speed: number;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private locationService: LocationTrackingService, private userAcc: UserAccount,
@@ -35,7 +44,7 @@ export class ResetRoutePage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ResetRoutePage');
+    console.log('ionViewDidLoad SetRoutePage');
     this.item.route = new Route();
     this.item = this.navParams.get("item");
     this.item.sellerLocation = this.userAcc.getToLocation();
@@ -48,22 +57,35 @@ export class ResetRoutePage {
         if(this.waypoint[i] != ""){
           this.item.route.addWaypoint(this.waypoint[i]);
           names[i] = this.waypoint[i];
+          this.locationService.geocoding(this.waypoint[i])
+          .subscribe(
+            (val) => {
+                console.log("geocoding call successful value returned in body", val);
+                let retval: GeocodingResult = JSON.parse(JSON.stringify(val));
+                this.locationService.addGeofence(retval.lat, retval.lng, this.waypoint[i]);
+            },
+            response => {
+                console.log("geocoding call in error", response);
+            })
         }
       }
-      this.locationService.addWaypointToRoute(this.item.shipmentId, names[0],names[1],names[2],this.item.route.waypoints.length)
+      this.locationService.addWaypointToRoute(this.item.shipmentId, names[0],names[1],names[2],this.item.route.waypoints.length, this.item.sellerLocation, this.item.buyerLocation, this.speed)
       .subscribe(
         (val) => {
             console.log("addWaypointToRoute call successful value returned in body", val);
-            const alert = this.alertCtrl.create({
-              cssClass: 'alertClass',
-              subTitle: 'The calculated waypoints are: <br>'+this.item.route.getWaypointStr(),
-              buttons: ['OK']
-            })
-            alert.present();
-            this.navCtrl.push("ShipLocationPage", {
-              "item": this.item,
-              "route": this.item.route
-            });
+            let retval: AddWaypointToRouteResult = JSON.parse(JSON.stringify(val))
+            if(!retval.hasError){
+              const alert = this.alertCtrl.create({
+                cssClass: 'alertClass',
+                subTitle: 'The calculated waypoints are: <br>'+this.item.route.getWaypointStr(),
+                buttons: ['OK']
+              })
+              alert.present();
+              this.navCtrl.push("ShipLocationPage", {
+                "item": this.item,
+                "route": this.item.route
+              });
+            }
           },
           response => {
               console.log("addWaypointToRoute call in error", response);
@@ -79,11 +101,10 @@ export class ResetRoutePage {
               if(!!retval.waypoints[i]) {
                 this.item.route.addWaypoint(retval.waypoints[i].name);
                 names[i] = retval.waypoints[i].name;
-                //this.locationService.addGeofence(retval.waypoints[i].lat, retval.waypoints[i].lng, retval.waypoints[i].name);
+                this.locationService.addGeofence(retval.waypoints[i].lat, retval.waypoints[i].lng, retval.waypoints[i].name);
               }
             }
-            this.item.route.distance = retval.distance;
-            this.locationService.addWaypointToRoute(this.item.shipmentId, names[0],names[1],names[2],retval.count)
+            this.locationService.addWaypointToRoute(this.item.shipmentId, names[0],names[1],names[2],retval.count, this.item.sellerLocation, this.item.buyerLocation, this.speed)
             .subscribe(
               (val) => {
                   console.log("addWaypointToRoute call successful value returned in body", val);
@@ -102,7 +123,7 @@ export class ResetRoutePage {
                   }
                 },
                 response => {
-                    console.log("addWaypointToRoute call in error", response);
+                    console.log("findWaypoints call in error", response);
                 })
         },
         response => {
@@ -110,5 +131,6 @@ export class ResetRoutePage {
         })
     }
   }
+
 
 }

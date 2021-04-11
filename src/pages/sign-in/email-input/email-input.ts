@@ -59,8 +59,11 @@ export class EmailInputPage {
   }
 
   checkInput() {
-    if(this.password == '' || this.email == '') {
+    if(this.password == '' || this.email == '' ) {
       this.errMsg = "Please enter valid email or password!";
+      return false;
+    }else if(this.location == '') {
+      this.errMsg = "Please enter valid location!";
       return false;
     }else
       return true;

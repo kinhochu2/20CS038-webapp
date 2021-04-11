@@ -1,7 +1,7 @@
 import { ProofService } from './../../../services/proof/ProofService';
 import { UserAccount } from './../../../config/UserAccount';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Item } from '../../../model/ItemList';
 import { Request } from '../../../model/Request';
 
@@ -25,7 +25,8 @@ export class CreateRequestPage {
   encodedData: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    protected userAcc: UserAccount, private proofService: ProofService) {
+    protected userAcc: UserAccount, private proofService: ProofService,
+    private alertCtrl: AlertController) {
   }
 
   ionViewDidLoad() {
@@ -37,6 +38,15 @@ export class CreateRequestPage {
   }
 
   createRequest() {
+    if(this.password != this.userAcc.getPassword()){
+      const alert = this.alertCtrl.create({
+        cssClass: 'alertClass',
+        subTitle: 'The item amount cannot be less than one.',
+        buttons: ['OK']
+      })
+      alert.present();
+      return;
+    }
     this.proofService.createRequest(this.item.shipmentId, this.proverLat, this.proverLng
       , this.item.seller, this.preHx, this.password)
       .subscribe(

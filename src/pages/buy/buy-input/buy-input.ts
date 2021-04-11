@@ -1,6 +1,7 @@
+import { UserAccount } from './../../../config/UserAccount';
 import { MarketService } from './../../../services/market/MarketService';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Item, ItemList } from '../../../model/ItemList';
 
 type LoadItemsResult = {
@@ -29,7 +30,8 @@ export class BuyInputPage {
   public itemCount = 0;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private marketService: MarketService) {
+    private marketService: MarketService, private alertCtrl: AlertController,
+    private userAcc: UserAccount) {
   }
 
   ionViewDidLoad() {
@@ -67,6 +69,24 @@ export class BuyInputPage {
   }
 
   buyItem(i: Item) {
+    if(i.amount < 1){
+      const alert = this.alertCtrl.create({
+        cssClass: 'alertClass',
+        subTitle: 'The item amount cannot be less than one.',
+        buttons: ['OK']
+      })
+      alert.present();
+      return;
+    }
+    if(i.seller == this.userAcc.getAddress()){
+      const alert = this.alertCtrl.create({
+        cssClass: 'alertClass',
+        subTitle: 'The item buyer cannot be same as the seller.',
+        buttons: ['OK']
+      })
+      alert.present();
+      return;
+    }
     this.navCtrl.push("BuyConfirmPage", {"item": i});
   }
 

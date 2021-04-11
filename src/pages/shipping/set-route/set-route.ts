@@ -13,11 +13,18 @@ type FindWaypointResult = {
     lng: number;
   }];
   count: number;
-  distance: number;
 }
 
 type AddWaypointToRouteResult = {
+  distance: string;
+  time: string;
+  eta: string;
   hasError: boolean;
+}
+
+type GeocodingResult = {
+  lat: number;
+  lng: number;
 }
 
 @IonicPage()
@@ -29,6 +36,7 @@ export class SetRoutePage {
 
   protected item: Item = new Item();
   waypoint: Array<string> = new Array<string>();
+  speed: number;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private locationService: LocationTrackingService, private userAcc: UserAccount,
@@ -49,22 +57,35 @@ export class SetRoutePage {
         if(this.waypoint[i] != ""){
           this.item.route.addWaypoint(this.waypoint[i]);
           names[i] = this.waypoint[i];
+          this.locationService.geocoding(this.waypoint[i])
+          .subscribe(
+            (val) => {
+                console.log("geocoding call successful value returned in body", val);
+                let retval: GeocodingResult = JSON.parse(JSON.stringify(val));
+                this.locationService.addGeofence(retval.lat, retval.lng, this.waypoint[i]);
+            },
+            response => {
+                console.log("geocoding call in error", response);
+            })
         }
       }
-      this.locationService.addWaypointToRoute(this.item.shipmentId, names[0],names[1],names[2],this.item.route.waypoints.length)
+      this.locationService.addWaypointToRoute(this.item.shipmentId, names[0],names[1],names[2],this.item.route.waypoints.length, this.item.sellerLocation, this.item.buyerLocation, this.speed)
       .subscribe(
         (val) => {
             console.log("addWaypointToRoute call successful value returned in body", val);
-            const alert = this.alertCtrl.create({
-              cssClass: 'alertClass',
-              subTitle: 'The calculated waypoints are: <br>'+this.item.route.getWaypointStr(),
-              buttons: ['OK']
-            })
-            alert.present();
-            this.navCtrl.push("ShipLocationPage", {
-              "item": this.item,
-              "route": this.item.route
-            });
+            let retval: AddWaypointToRouteResult = JSON.parse(JSON.stringify(val))
+            if(!retval.hasError){
+              const alert = this.alertCtrl.create({
+                cssClass: 'alertClass',
+                subTitle: 'The calculated waypoints are: <br>'+this.item.route.getWaypointStr(),
+                buttons: ['OK']
+              })
+              alert.present();
+              this.navCtrl.push("ShipLocationPage", {
+                "item": this.item,
+                "route": this.item.route
+              });
+            }
           },
           response => {
               console.log("addWaypointToRoute call in error", response);
@@ -83,8 +104,7 @@ export class SetRoutePage {
                 this.locationService.addGeofence(retval.waypoints[i].lat, retval.waypoints[i].lng, retval.waypoints[i].name);
               }
             }
-            this.item.route.distance = retval.distance;
-            this.locationService.addWaypointToRoute(this.item.shipmentId, names[0],names[1],names[2],retval.count)
+            this.locationService.addWaypointToRoute(this.item.shipmentId, names[0],names[1],names[2],retval.count, this.item.sellerLocation, this.item.buyerLocation, this.speed)
             .subscribe(
               (val) => {
                   console.log("addWaypointToRoute call successful value returned in body", val);
