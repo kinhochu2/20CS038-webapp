@@ -1,6 +1,9 @@
 
 <ion-header>
   <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
     <ion-title>Ship-location</ion-title>
   </ion-navbar>
 </ion-header>
@@ -11,11 +14,11 @@
   <form>
     <ion-item>
       <ion-label>From:</ion-label>
-      <ion-label>{{ item.sellerLocation }}</ion-label>
+      <ion-label text-wrap>{{ item.sellerLocation }}</ion-label>
     </ion-item>
     <ion-item>
       <ion-label>To:</ion-label>
-      <ion-label>{{ item.buyerLocation }}</ion-label>
+      <ion-label text-wrap>{{ item.buyerLocation }}</ion-label>
     </ion-item>
     <ion-item>
       <ion-label>Estimated Distance:</ion-label>
@@ -26,12 +29,13 @@
       <ion-label>{{ time }} minutes</ion-label>
     </ion-item>
     <ion-item>
-      <ion-label>Estimated Time of Arrival:</ion-label>
-      <ion-label>{{ eta }}</ion-label>
+      <ion-label text-wrap>Estimated Time of Arrival:</ion-label>
+      <ion-label text-wrap>{{ eta }}</ion-label>
     </ion-item>
   </form>
   <div class="buttons">
     <button class="button-white" (click)="resetRoute()">Reset and generate new route</button>
+    <button class="button-white" (click)="checkRequests()">Check requests</button>
     <button class="button-white" (click)="finishShipping()">Finish shipment</button>
   </div>
   <div class="buttons" *ngIf="!!item.route">

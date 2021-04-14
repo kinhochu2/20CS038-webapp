@@ -77,7 +77,7 @@ export class TrackLocationPage {
         this.item.buyerLocation = retval.buyerLocation;
         this.item.route.waypoints = retval.waypoints;
         this.waypointSet = retval.waypointSet;
-        this.distance = retval.distance;
+        this.distance = retval.distance.substring(0, 4);
         this.eta = retval.eta;
         this.time = retval.time;
       },
@@ -160,6 +160,12 @@ export class TrackLocationPage {
     }).addTo(this.map);
   }
 
+  checkRequests() {
+    console.log("this.item.shipmentId"+this.item.shipmentId);
+    this.navCtrl.push("RequestListPage", {
+      "shipmentId": this.item.shipmentId
+    })
+  }
 }
 
 

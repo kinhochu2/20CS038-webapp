@@ -62,6 +62,21 @@ export class ShipLocationPage {
     this.item.seller = this.userAcc.getAddress();
     this.item.sellerLocation = this.userAcc.getToLocation();
     this.getShipmentDetails();
+
+    var intervalId = setInterval(function() {
+      this.locationServ.updateLocation(this.currentLat, this.currentLng)
+        .subscribe(
+          (val) => {
+            console.log("updateLocation call successful value returned in body", val);
+          },
+          response => {
+            console.log("updateLocation call in error", response);
+          },
+          () => {
+              console.log("The updateLocation observable is now completed.");
+          });
+    }, 60000);
+    console.log("intervalId: "+intervalId.toString());
   }
 
   ngAfterViewInit(): void {
@@ -78,7 +93,7 @@ export class ShipLocationPage {
         this.item.buyerLocation = retval.buyerLocation;
         this.item.route = new Route();
         this.item.waypoints = retval.waypointName;
-        this.distance = retval.distance;
+        this.distance = retval.distance.substring(0, 4);
         this.eta = retval.eta;
         this.time = retval.time;
       },
@@ -116,13 +131,16 @@ export class ShipLocationPage {
               console.log("The updateLocation observable is now completed.");
           });
        })
+       console.log("this.item.waypoints.length: "+this.item.waypoints.length);
        for(let i=0;i<this.item.waypoints.length;i++) {
+         console.log("geocoding begin");
         this.locationServ.geocoding(this.item.waypoints[i])
         .subscribe(
           (val) => {
               console.log("geocoding call successful value returned in body", val);
               let retval: GeocodingResult = JSON.parse(JSON.stringify(val));
               L.circle([retval.lat, retval.lng], { radius: 200 }).addTo(this.map);
+              console.log("Circle added.");
           },
           response => {
               console.log("geocoding call in error", response);
@@ -221,5 +239,12 @@ export class ShipLocationPage {
       () => {
           console.log("The verifyBlocks observable is now completed.");
       });
+  }
+
+  checkRequests() {
+    console.log("this.item.shipmentId"+this.item.shipmentId);
+    this.navCtrl.push("RequestListPage", {
+      "shipmentId": this.item.shipmentId
+    })
   }
 }

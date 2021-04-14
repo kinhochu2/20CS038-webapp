@@ -1,0 +1,32 @@
+<!--
+  Generated template for the RequestListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>request-list</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list *ngFor="let request of requests">
+    <div class="item-list">
+      <div class="item-info1">
+        <ion-label>Request ID: {{request.requestId}}</ion-label>
+        <ion-label text-wrap>Timestamp: {{request.timestamp}}</ion-label>
+      </div>
+      <div class="item-info2">
+        <ion-label text-wrap>Seller Latitude: {{request.sellerLat}}</ion-label>
+        <ion-label text-wrap>Seller Longitude: {{request.sellerLng}}</ion-label>
+      </div>
+    </div>
+    <div class="item-list2">
+      <button class="button-white" type="submit" (click)="checkResponses(request)">
+        Check Responses
+      </button>
+    </div>
+    <div class="line-break"></div>
+  </ion-list>
+</ion-content>

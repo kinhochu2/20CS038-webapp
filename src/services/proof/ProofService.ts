@@ -35,4 +35,12 @@ export class ProofService {
     return this.httpProvider.postRequest("proof/verifyblocks", data);
   }
 
+  getRequests(shipmentId) {
+    return this.httpProvider.getRequest("proof/getrequests?shipmentId="+shipmentId);
+  }
+
+  getResponses(requestId) {
+    return this.httpProvider.getRequest("proof/getresponses?requestId="+requestId);
+  }
+
 }
