@@ -6,23 +6,40 @@
 </ion-header>
 
 <ion-content padding>
-  <div class="directions">
-    <ion-label>From: {{ item.sellerLocation }}</ion-label>
-    <ion-label>To: {{ item.buyerLocation }}</ion-label>
-    <ion-label>Your nearest waypoint: {{userAcc.getNearestWaypoint()}}</ion-label>
-  </div>
-  <ng-container *ngIf="!!item.route">
-  <ng-container *ngIf="item.route.checkActiveRequest()!=null">
-    <button class="button-white" (click)="checkRequest(item.route.checkActiveRequest())">Check your request</button>
-  </ng-container>
-  <ng-container *ngIf="item.route.checkActiveRequest()==null">
-    <button class="button-white" (click)="createRequest()">Create request</button>
-  </ng-container>
-  </ng-container>
-  <!-- <ion-icon name="qr-code" (click)="showProof()"></ion-icon> -->
   <div id="map">
   </div>
-
-  <button class="button-white" (click)="resetRoute()">Reset and generate new route</button>
-  <button class="button-white" (click)="finishShipping()">Finish shipment</button>
+  <form>
+    <ion-item>
+      <ion-label>From:</ion-label>
+      <ion-label>{{ item.sellerLocation }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>To:</ion-label>
+      <ion-label>{{ item.buyerLocation }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Estimated Distance:</ion-label>
+      <ion-label>{{ distance }} Miles</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Required time:</ion-label>
+      <ion-label>{{ time }} minutes</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Estimated Time of Arrival:</ion-label>
+      <ion-label>{{ eta }}</ion-label>
+    </ion-item>
+  </form>
+  <div class="buttons">
+    <button class="button-white" (click)="resetRoute()">Reset and generate new route</button>
+    <button class="button-white" (click)="finishShipping()">Finish shipment</button>
+  </div>
+  <div class="buttons" *ngIf="!!item.route">
+    <ng-container *ngIf="item.route.checkActiveRequest()!=null">
+      <button class="button-white" (click)="checkRequest(item.route.checkActiveRequest())">Check your request</button>
+    </ng-container>
+    <ng-container *ngIf="item.route.checkActiveRequest()==null">
+      <button class="button-white" (click)="createRequest()">Create request</button>
+    </ng-container>
+  </div>
 </ion-content>

@@ -6,16 +6,26 @@ import { LocationTrackingService } from './../../../services/Location-tracking/L
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Route } from '../../../model/Route';
+import { BackgroundGeolocationService } from '../../../services/Location-tracking/BackgroundGeolocationService';
 
 declare var L: any;
+
+const MapQuestKey = '2sdNBLXdUDfxllrLzrxrNuuO9l1DGtt0';
 
 type GetShipmentDetailsResult = {
   sellerLocation: string;
   buyerLocation: string;
   waypointSet: boolean;
   waypointName: string[];
+  distance: string;
+  eta: string;
+  time: string;
 }
 
+type GeocodingResult = {
+  lat: number;
+  lng: number;
+}
 @IonicPage()
 @Component({
   selector: 'page-ship-location',
@@ -28,11 +38,19 @@ export class ShipLocationPage {
   public currentLat;
   public currentLng;
   protected encodedData;
+  public distance: string;
+  public eta: string;
+  public time: string;
+
+  private centerCoords = {
+    lat: 22.302711,
+    lng: 114.177216
+  }
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private locationServ: LocationTrackingService, protected userAcc: UserAccount,
     private marketServ: MarketService, private alertCtrl: AlertController,
-    private proofServ: ProofService) {
+    private proofServ: ProofService, private bgGeo: BackgroundGeolocationService) {
   }
 
 
@@ -60,6 +78,9 @@ export class ShipLocationPage {
         this.item.buyerLocation = retval.buyerLocation;
         this.item.route = new Route();
         this.item.waypoints = retval.waypointName;
+        this.distance = retval.distance;
+        this.eta = retval.eta;
+        this.time = retval.time;
       },
       response => {
         console.log("getShipmentDetails call in error", response);
@@ -80,10 +101,9 @@ export class ShipLocationPage {
         this.currentLat= result.lat;
         this.currentLng= result.lng;
         if (this.map != undefined) { this.map.remove(); }
-        //this.map = this.locationServ.initMap(this.map, result.lat, result.lng);
-        this.map = this.locationServ.setRoute(this.map, this.item.sellerLocation, this.item.buyerLocation, this.item.waypoints);
-        this.map = this.locationServ.addMarker(this.map, this.currentLat, this.currentLng, "You are here");
-
+        this.map = this.initMaps(this.centerCoords.lat, this.centerCoords.lng);
+        this.setRoute(this.item.sellerLocation, this.item.buyerLocation, this.item.waypoints);
+        this.addMarker( this.currentLat, this.currentLng, "You are here");
         this.locationServ.updateLocation(this.currentLat, this.currentLng)
         .subscribe(
           (val) => {
@@ -96,7 +116,53 @@ export class ShipLocationPage {
               console.log("The updateLocation observable is now completed.");
           });
        })
+       for(let i=0;i<this.item.waypoints.length;i++) {
+        this.locationServ.geocoding(this.item.waypoints[i])
+        .subscribe(
+          (val) => {
+              console.log("geocoding call successful value returned in body", val);
+              let retval: GeocodingResult = JSON.parse(JSON.stringify(val));
+              L.circle([retval.lat, retval.lng], { radius: 200 }).addTo(this.map);
+          },
+          response => {
+              console.log("geocoding call in error", response);
+          })
+       }
     }
+  }
+
+  initMaps(lat, lng) {
+    L.mapquest.key = MapQuestKey;
+    var map = L.mapquest.map('map', {
+      center: [lat, lng],
+      layers: L.mapquest.tileLayer('dark'), //'map'
+      zoom: 13
+    });
+    return map;
+  }
+
+  setRoute(start: string, end: string, waypoints) {
+    L.mapquest.key = MapQuestKey;
+    L.mapquest.directions().route({
+      start: start,
+      end: end,
+      waypoints: waypoints
+    });
+  }
+
+  addMarker(lat, lng, text) {
+    let fg = L.featureGroup();
+    L.mapquest.textMarker([lat,lng], {
+      text: text,
+      position: 'right',
+      type: 'marker',
+      icon: {
+      primaryColor: '#a8333d',
+      secondaryColor: '#333333',
+      size: 'sm'
+      },
+      draggable: false
+    }).addTo(this.map);
   }
 
   createRequest() {
@@ -126,6 +192,7 @@ export class ShipLocationPage {
       (val) => {
         console.log("finishShipping call successful value returned in body", val);
         this.verifyBlock();
+        this.bgGeo.removeGeofences();
         const alert = this.alertCtrl.create({
           cssClass: 'alertClass',
           subTitle: 'The shipment is finished and your payment is settled.',

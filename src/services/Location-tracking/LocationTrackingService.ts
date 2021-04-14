@@ -2,7 +2,6 @@ import { UserAccount } from './../../config/UserAccount';
 import { HttpProvider } from './../../providers/HttpProvider';
 import { Injectable } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation'
-import { Geofence } from '@ionic-native/geofence/ngx';
 
 declare var L: any;
 
@@ -21,7 +20,7 @@ export class LocationTrackingService {
   }
 
   constructor(private httpProvider: HttpProvider, private geolocation: Geolocation,
-    private geofence: Geofence, private userAcc: UserAccount) {
+    private userAcc: UserAccount) {
   }
 
   async getCurrentLocation() {
@@ -115,48 +114,7 @@ export class LocationTrackingService {
     let watch = this.geolocation.watchPosition();
     watch.subscribe((data) => {
       console.log(data.toString());
-    // data can be a set of coordinates, or an error (if an error occurred).
-    //console.log(data.coords.latitude);
-    // console.log(data.coords.longitude);
     });
-  }
-
-
-  addGeofence(lat ,lng, name) {
-    let fence = {
-      id: name+lat+lng, //any unique ID
-      latitude:       lat, //center of geofence radius
-      longitude:      lng,
-      radius:         200, //radius to edge of geofence in meters
-      transitionType: 1,
-      notification: { //notification settings
-          id:             1, //any unique ID
-          title:          'You crossed a fence', //notification title
-          text:           'You just arrived to' + name, //notification body
-          openAppOnClick: true //open app when notification is tapped
-      }
-    }
-
-    this.geofence.addOrUpdate(fence).then(
-      () => console.log('Geofence added'),
-      (err) => console.log('Geofence failed to add')
-    );
-
-    this.geofence.onTransitionReceived().subscribe(resp => {
-      console.log("geofence on transition recieved", resp);
-      alert(JSON.stringify(resp));
-      this.userAcc.setNearestWaypoint(JSON.stringify(resp));
-    });
-
-  }
-
-  removeGeofence() {
-    this.geofence.removeAll().then(function () {
-      console.log('All geofences successfully removed.');
-  }
-  , function (error) {
-      console.log('Removing geofences failed', error);
-  });
   }
 
   addWaypointToRoute(shipmentId, name1, name2, name3, count, start, end, mph) {

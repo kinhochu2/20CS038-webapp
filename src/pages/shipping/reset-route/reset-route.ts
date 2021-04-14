@@ -1,3 +1,4 @@
+import { BackgroundGeolocationService } from '../../../services/Location-tracking/BackgroundGeolocationService';
 import { PayCompletePage } from './../../payment/pay-complete/pay-complete';
 import { Route } from '../../../model/Route';
 import { Item } from './../../../model/ItemList';
@@ -40,7 +41,7 @@ export class ResetRoutePage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private locationService: LocationTrackingService, private userAcc: UserAccount,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController, private bgGeo: BackgroundGeolocationService) {
   }
 
   ionViewDidLoad() {
@@ -62,7 +63,7 @@ export class ResetRoutePage {
             (val) => {
                 console.log("geocoding call successful value returned in body", val);
                 let retval: GeocodingResult = JSON.parse(JSON.stringify(val));
-                this.locationService.addGeofence(retval.lat, retval.lng, this.waypoint[i]);
+                this.bgGeo.addGeofence(this.waypoint[i], retval.lat, retval.lng)
             },
             response => {
                 console.log("geocoding call in error", response);
@@ -101,7 +102,7 @@ export class ResetRoutePage {
               if(!!retval.waypoints[i]) {
                 this.item.route.addWaypoint(retval.waypoints[i].name);
                 names[i] = retval.waypoints[i].name;
-                this.locationService.addGeofence(retval.waypoints[i].lat, retval.waypoints[i].lng, retval.waypoints[i].name);
+                this.bgGeo.addGeofence(retval.waypoints[i].name, retval.waypoints[i].lat, retval.waypoints[i].lng)
               }
             }
             this.locationService.addWaypointToRoute(this.item.shipmentId, names[0],names[1],names[2],retval.count, this.item.sellerLocation, this.item.buyerLocation, this.speed)

@@ -11,13 +11,31 @@
 </ion-header>
 
 <ion-content padding>
-  <div class="directions">
-    <ion-label>From: {{ item.sellerLocation }}</ion-label>
-    <ion-label>To: {{ item.buyerLocation }}</ion-label>
-  </div>
-
-
   <div id="map" *ngIf="waypointSet">
+  </div>
+  <div class="directions" *ngIf="waypointSet">
+    <form>
+      <ion-item>
+        <ion-label>From:</ion-label>
+        <ion-label>{{ item.sellerLocation }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>To:</ion-label>
+        <ion-label>{{ item.buyerLocation }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>Estimated Distance:</ion-label>
+        <ion-label>{{ distance }} Miles</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>Required time:</ion-label>
+        <ion-label>{{ time }} minutes</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>Estimated Time of Arrival:</ion-label>
+        <ion-label>{{ eta }}</ion-label>
+      </ion-item>
+    </form>
   </div>
   <div *ngIf="!waypointSet">
     <ion-label>The seller has not set the route of the shipment yet!</ion-label>
