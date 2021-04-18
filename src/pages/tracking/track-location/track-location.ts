@@ -19,7 +19,7 @@ type GetShipmentDetailsResult = {
   sellerLocation: string;
   buyerLocation: string;
   waypointSet: boolean;
-  waypoints: string[];
+  waypointName: string[];
   distance: string;
   eta: string;
   time: string;
@@ -56,11 +56,11 @@ export class TrackLocationPage {
   ionViewDidLoad() {
     this.item.route = new Route()
     console.log('ionViewDidLoad TrackLocationPage');
-    this.item = this.navParams.get("item");
-    this.item.route = this.navParams.get("route");
-    this.item.buyerLocation = this.userAcc.getToLocation();
-    this.item.buyer = this.userAcc.getAddress();
+    this.item = this.userAcc.item;
+    this.item.seller = this.navParams.get("seller");
     this.getShipmentDetails();
+    this.item.route = this.navParams.get("route");
+    this.item.buyer = this.userAcc.getAddress();
   }
 
   ngAfterViewInit(): void {
@@ -75,7 +75,8 @@ export class TrackLocationPage {
         let retval: GetShipmentDetailsResult = JSON.parse(JSON.stringify(val));
         this.item.sellerLocation = retval.sellerLocation;
         this.item.buyerLocation = retval.buyerLocation;
-        this.item.route.waypoints = retval.waypoints;
+        this.item.route = new Route();
+        this.item.waypoints = retval.waypointName.reverse();
         this.waypointSet = retval.waypointSet;
         this.distance = retval.distance.substring(0, 4);
         this.eta = retval.eta;
@@ -90,13 +91,14 @@ export class TrackLocationPage {
   }
 
   initMap() {
+    if (this.map != undefined || this.map != null) { this.map.remove(); }
     console.log("initing Map");
     const container = document.getElementById('map');
 
     // 'map' refers to a <div> element with the ID map
     if(container) {
       console.log("container is not null");
-       this.locationServ.getLocation(this.item.seller)
+       this.locationServ.getLocation(this.userAcc.item.seller)
        .subscribe(
         (val) => {
           console.log("getLocation call successful value returned in body", val);
@@ -111,18 +113,6 @@ export class TrackLocationPage {
         () => {
             console.log("The getLocation observable is now completed.");
         });
-        for(let i=0;i<this.item.waypoints.length;i++) {
-          this.locationServ.geocoding(this.item.waypoints[i])
-          .subscribe(
-            (val) => {
-                console.log("geocoding call successful value returned in body", val);
-                let retval: GeocodingResult = JSON.parse(JSON.stringify(val));
-                L.circle([retval.lat, retval.lng], { radius: 200 }).addTo(this.map);
-            },
-            response => {
-                console.log("geocoding call in error", response);
-            })
-         }
     }
   }
 
@@ -165,6 +155,25 @@ export class TrackLocationPage {
     this.navCtrl.push("RequestListPage", {
       "shipmentId": this.item.shipmentId
     })
+  }
+
+  showCircle() {
+    if(!!document.getElementById('map') && !!this.item.waypoints && !!this.map) {
+      for(let i=0;i<this.item.waypoints.length;i++) {
+        console.log("geocoding begin");
+      this.locationServ.geocoding(this.item.waypoints[i])
+      .subscribe(
+        (val) => {
+            console.log("geocoding call successful value returned in body", val);
+            let retval: GeocodingResult = JSON.parse(JSON.stringify(val));
+            L.circle([retval.lat, retval.lng], { radius: 200 }).addTo(this.map);
+            console.log("Circle added.");
+        },
+        response => {
+            console.log("geocoding call in error", response);
+        })
+      }
+    }
   }
 }
 

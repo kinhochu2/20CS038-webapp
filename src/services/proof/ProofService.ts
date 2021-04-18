@@ -9,8 +9,7 @@ export class ProofService {
   }
 
   createRequest(shipmentId, proverLat, proverLng, proverAddr, preHx, password) {
-    let timestamp = new Date();
-    let data = "shipmentId="+shipmentId+"&proverLat="+proverLat+"&proverLng="+proverLng+"&proverAddr="+proverAddr+"&preHx="+preHx+"&password="+password+"&timestamp="+timestamp.toDateString();
+    let data = "shipmentId="+shipmentId+"&proverLat="+proverLat+"&proverLng="+proverLng+"&proverAddr="+proverAddr+"&password="+password;
     return this.httpProvider.postRequest("proof/createrequest", data)
   }
 
@@ -25,9 +24,9 @@ export class ProofService {
     return this.httpProvider.postRequest("proof/loadrequest", data);
   }
 
-  submitBlock(requestId, preHx) {
-    let data = "requestId="+requestId+"&preHx="+preHx;
-    return this.httpProvider.postRequest("proof/submitBlock", data);
+  submitBlock(requestId, preHx, address) {
+    let data = "requestId="+requestId+"&preHx="+preHx+"&address="+address;
+    return this.httpProvider.postRequest("proof/submitblock", data);
   }
 
   verifyBlocks(blockHx, totalCount) {

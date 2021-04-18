@@ -39,7 +39,7 @@ export class Route {
 
   getLatestBlockHx() {
     if(!!this.requests[this.requests.length-1]){
-      return this.requests[this.requests.length-1].hx;
+      return this.requests[this.requests.length-1].signedHx;
     }else {
       return "null";
     }

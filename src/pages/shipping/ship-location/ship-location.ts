@@ -7,6 +7,9 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Route } from '../../../model/Route';
 import { BackgroundGeolocationService } from '../../../services/Location-tracking/BackgroundGeolocationService';
+// import sha256 from 'crypto-js/sha256';
+// import aes from 'crypto-js/aes';
+import CryptoJS from 'crypto-js'
 
 declare var L: any;
 
@@ -42,6 +45,8 @@ export class ShipLocationPage {
   public eta: string;
   public time: string;
 
+  hasActiveRequest: boolean = false;
+
   private centerCoords = {
     lat: 22.302711,
     lng: 114.177216
@@ -50,32 +55,42 @@ export class ShipLocationPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private locationServ: LocationTrackingService, protected userAcc: UserAccount,
     private marketServ: MarketService, private alertCtrl: AlertController,
-    private proofServ: ProofService, private bgGeo: BackgroundGeolocationService) {
+    private proofServ: ProofService,
+    private bgGeo: BackgroundGeolocationService
+    ) {
   }
 
 
   ionViewDidLoad() {
-    this.item.route = new Route();
+    //this.item.route = new Route();
     console.log('ionViewDidLoad ShipLocationPage');
     this.item = this.navParams.get("item");
-    this.item.route = this.navParams.get("route");
     this.item.seller = this.userAcc.getAddress();
     this.item.sellerLocation = this.userAcc.getToLocation();
     this.getShipmentDetails();
-
+    let r = this.userAcc.checkActiveRequest();
+    if(!!r) {
+      this.hasActiveRequest = true;
+      this.userAcc.activeRequest = r;
+    }
     var intervalId = setInterval(function() {
-      this.locationServ.updateLocation(this.currentLat, this.currentLng)
-        .subscribe(
-          (val) => {
-            console.log("updateLocation call successful value returned in body", val);
-          },
-          response => {
-            console.log("updateLocation call in error", response);
-          },
-          () => {
-              console.log("The updateLocation observable is now completed.");
-          });
-    }, 60000);
+      this.locationServ.getCurrentLocation().then((result) => {
+        this.currentLat= result.lat;
+        this.currentLng= result.lng;
+        this.locationServ.updateLocation(this.currentLat, this.currentLng)
+          .subscribe(
+            (val) => {
+              console.log("updateLocation call successful value returned in body", val);
+            },
+            response => {
+              console.log("updateLocation call in error", response);
+            },
+            () => {
+                console.log("The updateLocation observable is now completed.");
+            });
+          })
+      }, 60000);
+
     console.log("intervalId: "+intervalId.toString());
   }
 
@@ -91,8 +106,8 @@ export class ShipLocationPage {
         let retval: GetShipmentDetailsResult = JSON.parse(JSON.stringify(val));
         this.item.sellerLocation = retval.sellerLocation;
         this.item.buyerLocation = retval.buyerLocation;
-        this.item.route = new Route();
-        this.item.waypoints = retval.waypointName;
+        //this.item.route = new Route();
+        this.item.waypoints = retval.waypointName.reverse();
         this.distance = retval.distance.substring(0, 4);
         this.eta = retval.eta;
         this.time = retval.time;
@@ -106,6 +121,7 @@ export class ShipLocationPage {
   }
 
   initMap() {
+    if (this.map != undefined || this.map != null) { this.map.remove(); }
     console.log("initing Map");
     const container = document.getElementById('map');
 
@@ -131,21 +147,6 @@ export class ShipLocationPage {
               console.log("The updateLocation observable is now completed.");
           });
        })
-       console.log("this.item.waypoints.length: "+this.item.waypoints.length);
-       for(let i=0;i<this.item.waypoints.length;i++) {
-         console.log("geocoding begin");
-        this.locationServ.geocoding(this.item.waypoints[i])
-        .subscribe(
-          (val) => {
-              console.log("geocoding call successful value returned in body", val);
-              let retval: GeocodingResult = JSON.parse(JSON.stringify(val));
-              L.circle([retval.lat, retval.lng], { radius: 200 }).addTo(this.map);
-              console.log("Circle added.");
-          },
-          response => {
-              console.log("geocoding call in error", response);
-          })
-       }
     }
   }
 
@@ -205,12 +206,17 @@ export class ShipLocationPage {
   }
 
   finishShipping() {
-    this.marketServ.finishShipping(this.item.shipmentId, this.item.seller, this.item.buyer, this.item.amount*this.item.price, this.userAcc.getPassword())
+    //let encodedPW = sha256(this.userAcc.getPassword());
+    //let encodedPW = CryptoJS.AES.encrypt(this.userAcc.getPassword(), this.userAcc.getAddress()).toString();
+    let encodedPW = CryptoJS.SHA256(this.userAcc.getPassword());
+    this.marketServ.finishShipping(this.item.shipmentId, this.item.seller, this.item.buyer,
+      this.item.amount*this.item.price, encodedPW)
     .subscribe(
       (val) => {
         console.log("finishShipping call successful value returned in body", val);
-        this.verifyBlock();
+        //this.verifyBlock();
         this.bgGeo.removeGeofences();
+        //this.locationServ.removeGeofences();
         const alert = this.alertCtrl.create({
           cssClass: 'alertClass',
           subTitle: 'The shipment is finished and your payment is settled.',
@@ -228,23 +234,43 @@ export class ShipLocationPage {
   }
 
   verifyBlock(){
-    this.proofServ.verifyBlocks(this.item.route.latestBlockHx, this.item.route.requests.length)
-    .subscribe(
-      (val) => {
-        console.log("verifyBlocks call successful value returned in body", val);
-      },
-      response => {
-        console.log("verifyBlocks call in error", response);
-      },
-      () => {
-          console.log("The verifyBlocks observable is now completed.");
-      });
+    // this.proofServ.verifyBlocks(this.item.route.latestBlockHx, this.item.route.requests.length)
+    // .subscribe(
+    //   (val) => {
+    //     console.log("verifyBlocks call successful value returned in body", val);
+    //   },
+    //   response => {
+    //     console.log("verifyBlocks call in error", response);
+    //   },
+    //   () => {
+    //       console.log("The verifyBlocks observable is now completed.");
+    //   });
   }
 
   checkRequests() {
     console.log("this.item.shipmentId"+this.item.shipmentId);
     this.navCtrl.push("RequestListPage", {
-      "shipmentId": this.item.shipmentId
+      "shipmentId": this.item.shipmentId,
+      "item": this.item
     })
+  }
+
+  showCircle() {
+    if(!!document.getElementById('map') && !!this.item.waypoints && !!this.map) {
+      for(let i=0;i<this.item.waypoints.length;i++) {
+        console.log("geocoding begin");
+      this.locationServ.geocoding(this.item.waypoints[i])
+      .subscribe(
+        (val) => {
+            console.log("geocoding call successful value returned in body", val);
+            let retval: GeocodingResult = JSON.parse(JSON.stringify(val));
+            L.circle([retval.lat, retval.lng], { radius: 200 }).addTo(this.map);
+            console.log("Circle added.");
+        },
+        response => {
+            console.log("geocoding call in error", response);
+        })
+      }
+    }
   }
 }

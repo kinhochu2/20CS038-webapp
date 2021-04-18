@@ -1,3 +1,4 @@
+//import { Geofence } from '@ionic-native/geofence/ngx';
 import { BackgroundGeolocationService } from '../services/Location-tracking/BackgroundGeolocationService';
 import { Geolocation } from '@ionic-native/geolocation';
 import { UserAccount } from './../config/UserAccount';
@@ -45,6 +46,7 @@ import { ProofService } from '../services/proof/ProofService';
     UserAccount,
     Geolocation,
     BackgroundGeolocationService
+    //Geofence
   ],
 })
 export class AppModule {}

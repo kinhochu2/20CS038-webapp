@@ -59,14 +59,16 @@ export class ShipListPage {
           this.itemCount = itemResult.count;
           for(let i=0;i<itemResult.count;i++){
             let it: Item = new Item();
-            it.id = itemResult.ids[i];
-            it.name = itemResult.names[i];
-            it.price = itemResult.prices[i];
-            it.buyer = itemResult.buyers[i];
-            it.buyerLocation = itemResult.buyerLocations[i];
-            it.shipmentId = itemResult.shipmentIds[i];
-            it.amount = itemResult.amounts[i]
-            this.items.push(it);
+            if(itemResult.amounts[i] > 0){
+              it.id = itemResult.ids[i];
+              it.name = itemResult.names[i];
+              it.price = itemResult.prices[i];
+              it.buyer = itemResult.buyers[i];
+              it.buyerLocation = itemResult.buyerLocations[i];
+              it.shipmentId = itemResult.shipmentIds[i];
+              it.amount = itemResult.amounts[i];
+              this.items.push(it);
+            }
           }
        }
       },
@@ -87,6 +89,7 @@ export class ShipListPage {
         let retval: GetWaypointsResult = JSON.parse(JSON.stringify(val));
         console.log("retval.hasError: "+retval.hasError+", retval.hasWaypointSet: "+retval.hasWaypointSet);
         if(!retval.hasError) {
+          this.userAcc.item = item;
           if(retval.hasWaypointSet) {
             this.navCtrl.push("ShipLocationPage", {
               "item": item

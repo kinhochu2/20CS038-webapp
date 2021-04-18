@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-label>You can set at most three waypoints for your route. If you do not input any waypoints, the system will automatically calculate for you</ion-label>
+  <ion-label text-wrap>You can set at most three waypoints for your route. If you do not input any waypoints, the system will automatically calculate for you</ion-label>
   <form (ngSubmit)="submitRoute()">
     <ion-item>
       <ion-label>Starting location</ion-label>
@@ -17,7 +17,7 @@
     </ion-item>
     <ion-item>
       <ion-label text-wrap>Your average speed in mph (miles per hour)</ion-label>
-      <ion-input type="number" [(ngModel)]="speed" name="speed"></ion-input>
+      <ion-input required type="number" [(ngModel)]="speed" name="speed"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>Waypoint 1</ion-label>

@@ -3,6 +3,9 @@ import { LocationTrackingService } from './../../../services/Location-tracking/L
 import { UserAccount } from './../../../config/UserAccount';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+// import sha256 from 'crypto-js/sha256';
+// import aes from 'crypto-js/aes';
+import CryptoJS from 'crypto-js';
 
 type LoadRequestDetailsResult = {
   proverLat: string;
@@ -10,6 +13,8 @@ type LoadRequestDetailsResult = {
   hasError: boolean;
   timestamp: string;
   shipmentId: string
+  proverAddr: string;
+  finished: boolean;
 }
 
 @IonicPage()
@@ -37,7 +42,6 @@ export class CreateResponsePage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad CreateResponsePage');
     this.requestId = this.navParams.get("requestId");
-    this.proverAddr = this.navParams.get("proverAddr");
     this.locationServ.getCurrentLocation().then((val) => {
       this.witnessLat = val.lat;
       this.witnessLng = val.lng;
@@ -56,6 +60,16 @@ export class CreateResponsePage {
             this.proverLng = retval.proverLng;
             this.timestamp = retval.timestamp;
             this.shipmentId = retval.shipmentId;
+            this.proverAddr = retval.proverAddr;
+            if(retval.finished) {
+              const alert = this.alertCtrl.create({
+                cssClass: 'alertClass',
+                subTitle: 'This request is already submitted to the network!',
+                buttons: ['OK']
+              })
+              alert.present();
+              this.navCtrl.setRoot("HomePage");
+            }
           }
         },
         response => {
@@ -70,16 +84,25 @@ export class CreateResponsePage {
     if(this.password != this.userAcc.getPassword()){
       const alert = this.alertCtrl.create({
         cssClass: 'alertClass',
-        subTitle: 'The item amount cannot be less than one.',
+        subTitle: 'Please input the correct password!',
         buttons: ['OK']
       })
       alert.present();
       return;
     }
-    this.proofService.addResponse(this.requestId, this.shipmentId, this.witnessLat, this.witnessLng, this.userAcc.getAddress(), this.password)
+    //let encodedPW = sha256(this.password);
+    let encodedPW = CryptoJS.SHA256(this.password).toString();
+    this.proofService.addResponse(this.requestId, this.shipmentId, this.witnessLat, this.witnessLng, this.userAcc.getAddress(), encodedPW)
     .subscribe(
       (val) => {
           console.log("addResponse call successful value returned in body", val);
+          const alert = this.alertCtrl.create({
+            cssClass: 'alertClass',
+            subTitle: 'The response has been created and sent.',
+            buttons: ['OK']
+          })
+          alert.present();
+          this.navCtrl.setRoot("HomePage");
       },
       response => {
           console.log("addResponse call in error", response);

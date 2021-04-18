@@ -2,6 +2,7 @@ import { UserAccount } from './../../config/UserAccount';
 import { HttpProvider } from './../../providers/HttpProvider';
 import { Injectable } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation'
+//import { Geofence } from '@ionic-native/geofence/ngx'
 
 declare var L: any;
 
@@ -20,8 +21,43 @@ export class LocationTrackingService {
   }
 
   constructor(private httpProvider: HttpProvider, private geolocation: Geolocation,
-    private userAcc: UserAccount) {
+    private userAcc: UserAccount,
+    // private geofence: Geofence
+    ) {
+      // this.geofence.initialize().then(function () {
+      //     console.log("Successful initialization");
+      // }, function (error) {
+      //     console.log("Error", error);
+      // });
   }
+
+  // addGeofence(id, lat, lng) {
+  //   this.geofence.addOrUpdate({
+  //     id:             id, //A unique identifier of geofence
+  //     latitude:       lat, //Geo latitude of geofence
+  //     longitude:      lng, //Geo longitude of geofence
+  //     radius:         200, //Radius of geofence in meters
+  //     transitionType: 1, //Type of transition 1 - Enter, 2 - Exit, 3 - Both
+  //     notification: {         //Notification object
+  //         title:          "EthsyShip", //Title of notification
+  //         text:           "You have reach "+id, //Text of notification
+  //         openAppOnClick: true,//is main app activity should be opened after clicking on notification
+  //     }
+  //   }).then(function () {
+  //       console.log('Geofence successfully added');
+  //   }, function (error) {
+  //       console.log('Adding geofence failed', error);
+  //   });
+
+  // }
+
+  // removeGeofences() {
+  //   this.geofence.removeAll().then(function () {
+  //     console.log('Geofence successfully removed');
+  //   }, function (error) {
+  //       console.log('Removing geofence failed', error);
+  //   });
+  // }
 
   async getCurrentLocation() {
     let coords = {

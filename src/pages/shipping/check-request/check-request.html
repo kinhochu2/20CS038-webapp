@@ -11,25 +11,41 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-input type="text" [(ngModel)]="encodedData"></ion-input>
-  <button class="button-white">Show QR code</button>
+  <div *ngIf="!request.finished && request.proverAddr == userAcc.getAddress()">
+    <ion-input type="text" [(ngModel)]="encodedData"></ion-input>
+    <button class="button-white" (click)="showProof()">Show QR code</button>
+  </div>
   <form (ngSubmit)="broadcastRequest()">
     <ion-item>
-      <ion-label>Prover address</ion-label>
-      <ion-label>{{ request.prover }}</ion-label>
+      <ion-label>Request ID</ion-label>
+      <ion-label>{{ request.requestId }}</ion-label>
     </ion-item>
     <ion-item>
-      <ion-label>Prover Lat:</ion-label>
+      <ion-label>Seller address</ion-label>
+      <ion-label>{{ request.proverAddr }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Shipment ID</ion-label>
+      <ion-label>{{ request.shipmentId }}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Seller Lat:</ion-label>
       <ion-label>{{ request.proverLat }}</ion-label>
     </ion-item>
     <ion-item>
-      <ion-label>Prover Lng:</ion-label>
+      <ion-label>Seller Lng:</ion-label>
       <ion-label>{{ request.proverLng }}</ion-label>
     </ion-item>
     <ion-item>
-      <ion-label>Request Hash Code:</ion-label>
-      <ion-label>{{ request.hx }}</ion-label>
+      <ion-label>Hash Code:</ion-label>
+      <ion-label>{{ request.signedHx }}</ion-label>
     </ion-item>
-    <button ion-button type="submit" class="submit" block>Finish and broadcast your request</button>
-  </form>
+    <ion-item>
+      <ion-label>Timestamp:</ion-label>
+      <ion-label text-wrap>{{ request.timestamp }}</ion-label>
+    </ion-item>
+    <div *ngIf="!request.finished && request.proverAddr == userAcc.getAddress()">
+      <button ion-button type="submit" class="submit" block>Finish and broadcast your request</button>
+    </div>
+    </form>
 </ion-content>

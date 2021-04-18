@@ -18,11 +18,14 @@
         <ion-label text-wrap>Timestamp: {{request.timestamp}}</ion-label>
       </div>
       <div class="item-info2">
-        <ion-label text-wrap>Seller Latitude: {{request.sellerLat}}</ion-label>
-        <ion-label text-wrap>Seller Longitude: {{request.sellerLng}}</ion-label>
+        <ion-label text-wrap>Seller Latitude: {{request.proverLat}}</ion-label>
+        <ion-label text-wrap>Seller Longitude: {{request.proverLng}}</ion-label>
       </div>
     </div>
     <div class="item-list2">
+      <button class="button-white" type="submit" (click)="checkDetails(request)" *ngIf="request.proverAddr==userAcc.getAddress()">
+        Check Details
+      </button>
       <button class="button-white" type="submit" (click)="checkResponses(request)">
         Check Responses
       </button>

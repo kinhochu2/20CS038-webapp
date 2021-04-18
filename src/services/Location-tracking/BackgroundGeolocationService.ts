@@ -18,22 +18,6 @@ export class BackgroundGeolocationService {
 
   configureBackgroundGeolocation() {
     // 1.  Listen to events.
-    BackgroundGeolocation.onLocation(location => {
-      console.log('[location] - ', location);
-    });
-
-    BackgroundGeolocation.onMotionChange(event => {
-      console.log('[motionchange] - ', event.isMoving, event.location);
-    });
-
-    BackgroundGeolocation.onHttp(response => {
-      console.log('[http] - ', response.success, response.status, response.responseText);
-    });
-
-    BackgroundGeolocation.onProviderChange(event => {
-      console.log('[providerchange] - ', event.enabled, event.status, event.gps);
-    });
-
     BackgroundGeolocation.onGeofencesChange(event => {
       console.log('[geofencechange] - ', event.on, event.off);
     });

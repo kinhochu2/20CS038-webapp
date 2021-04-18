@@ -11,5 +11,10 @@ page-track-location {
       border-radius: 0px;
       width: 200px;
     }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+    }
   }
 }

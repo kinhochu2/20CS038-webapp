@@ -34,16 +34,12 @@
     </ion-item>
   </form>
   <div class="buttons">
+    <button class="button-white" (click)="showCircle()">Show Geofences</button>
     <button class="button-white" (click)="resetRoute()">Reset and generate new route</button>
     <button class="button-white" (click)="checkRequests()">Check requests</button>
-    <button class="button-white" (click)="finishShipping()">Finish shipment</button>
   </div>
-  <div class="buttons" *ngIf="!!item.route">
-    <ng-container *ngIf="item.route.checkActiveRequest()!=null">
-      <button class="button-white" (click)="checkRequest(item.route.checkActiveRequest())">Check your request</button>
-    </ng-container>
-    <ng-container *ngIf="item.route.checkActiveRequest()==null">
-      <button class="button-white" (click)="createRequest()">Create request</button>
-    </ng-container>
+  <div class="buttons">
+    <button class="button-white" (click)="createRequest()">Create request</button>
+    <button class="button-white" (click)="finishShipping()">Finish shipment</button>
   </div>
 </ion-content>

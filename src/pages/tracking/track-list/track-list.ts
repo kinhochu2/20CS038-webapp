@@ -57,15 +57,17 @@ export class TrackListPage {
           let itemResult: ItemsResult = JSON.parse(JSON.stringify(retval.result));
           this.itemCount = itemResult.count;
           for(let i=0;i<itemResult.count;i++){
-            let it: Item = new Item();
-            it.id = itemResult.ids[i];
-            it.name = itemResult.names[i];
-            it.price = itemResult.prices[i];
-            it.amount = itemResult.amounts[i];
-            it.seller = itemResult.sellers[i];
-            it.sellerLocation = itemResult.sellerLocations[i];
-            it.shipmentId = itemResult.shipmentIds[i];
-            this.items.push(it);
+            if(itemResult.amounts[i] > 0){
+              let it: Item = new Item();
+              it.id = itemResult.ids[i];
+              it.name = itemResult.names[i];
+              it.price = itemResult.prices[i];
+              it.amount = itemResult.amounts[i];
+              it.seller = itemResult.sellers[i];
+              it.sellerLocation = itemResult.sellerLocations[i];
+              it.shipmentId = itemResult.shipmentIds[i];
+              this.items.push(it);
+            }
           }
        }
       },
@@ -78,6 +80,9 @@ export class TrackListPage {
   }
 
   track(item: Item) {
+    console.log("track, item.seller: "+item.seller);
+    this.userAcc.item = item;
+    this.userAcc.item.seller = item.seller;
     this.locationServ.getWaypoints(item.shipmentId)
     .subscribe(
       (val) => {
@@ -86,8 +91,9 @@ export class TrackListPage {
         console.log("retval.hasError: "+retval.hasError+", retval.hasWaypointSet: "+retval.hasWaypointSet);
         if(!retval.hasError) {
           if(retval.hasWaypointSet) {
-            this.navCtrl.push("TrackLocationPage", {
-              "item": item
+            this.navCtrl.setRoot("TrackLocationPage", {
+              "item": item,
+              "seller": item.seller
             })
           }else if(!retval.hasWaypointSet){
             const alert = this.alertCtrl.create({

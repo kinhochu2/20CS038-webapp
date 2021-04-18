@@ -1,9 +1,15 @@
 export class Response {
   requestId: string;
-  witness: string;
-  signedHx: string;
+  witnessAddr: string;
+  witnessLat: string;
+  witnessLng: string;
+  timestamp: string;
 
-  constructor() {
-
+  constructor(requestId, witnessAddr, witnessLat, witnessLng, timestamp) {
+    this.requestId = requestId;
+    this.witnessAddr = witnessAddr;
+    this.witnessLat = witnessLat;
+    this.witnessLng = witnessLng;
+    this.timestamp = timestamp;
   }
 }

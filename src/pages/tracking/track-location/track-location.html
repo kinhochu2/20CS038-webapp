@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content padding>
-  <div id="map" *ngIf="waypointSet">
+  <div id="map">
   </div>
   <div class="directions" *ngIf="waypointSet">
     <form>
@@ -37,5 +37,8 @@
   <div *ngIf="!waypointSet">
     <ion-label>The seller has not set the route of the shipment yet!</ion-label>
   </div>
-  <button class="button-white" (click)="checkRequests()">Check requests</button>
+  <div class="buttons">
+    <button class="button-white" (click)="showCircle()">Show Geofences</button>
+    <button class="button-white" (click)="checkRequests()">Check requests</button>
+  </div>
 </ion-content>

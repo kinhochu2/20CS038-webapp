@@ -1,10 +1,11 @@
+import { Response } from './../../model/Response';
 import { ProofService } from './../../services/proof/ProofService';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 type GetResponsesResult = {
   result: any,
-  hasError: string,
+  hasError: boolean,
   count: number
 }
 
@@ -14,14 +15,6 @@ type ResponseResult = {
   witnessLngs: string[],
   timestamps: string[]
 }
-
-type Response = {
-  witnessAddr: string,
-  witnessLat: string,
-  witnessLng: string,
-  timestamp: string
-}
-
 @IonicPage()
 @Component({
   selector: 'page-response-list',
@@ -29,7 +22,7 @@ type Response = {
 })
 export class ResponseListPage {
 
-  responses: Response[];
+  responses: Response[] = new Array<Response>();
   requestId: string;
   count: number = 0;
 
@@ -40,23 +33,21 @@ export class ResponseListPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad RequestListPage');
     this.requestId = this.navParams.get("requestId");
+    this.loadResponses();
   }
 
-  loadRequests() {
+  loadResponses() {
     this.proofServ.getResponses(this.requestId)
     .subscribe(
       (val) => {
         console.log("getResponses call successful value returned in body", val);
         let retval: GetResponsesResult = JSON.parse(JSON.stringify(val));
-        if(retval.hasError == "false") {
+        if(!retval.hasError) {
           this.count = retval.count;
           let responseResult: ResponseResult = JSON.parse(JSON.stringify(retval.result));
           for(let i=0;i<this.count;i++) {
-            let r: Response;
-            r.witnessAddr = responseResult.witnessAddrs[i];
-            r.witnessLat = responseResult.witnessLats[i];
-            r.witnessLng = responseResult.witnessLngs[i];
-            r.timestamp = responseResult.timestamps[i];
+            let r: Response = new Response(this.requestId, responseResult.witnessAddrs[i],
+              responseResult.witnessLats[i], responseResult.witnessLngs[i], responseResult.timestamps[i]);
             this.responses.push(r);
           }
         }

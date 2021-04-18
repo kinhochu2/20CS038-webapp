@@ -2,7 +2,9 @@ import { UserAccount } from './../../../config/UserAccount';
 import { AuthService } from './../../../services/auth/AuthService';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import sha256 from 'crypto-js/sha256';
+// import sha256 from 'crypto-js/sha256';
+// import aes from 'crypto-js/aes';
+import CryptoJS from 'crypto-js';
 
 type SignInResult = {
   email: string;
@@ -39,7 +41,8 @@ export class EmailInputPage {
 
   signIn() {
     if(this.checkInput()){
-     let encodedPW = sha256(this.password);
+    //  let encodedPW = sha256(this.password);
+    let encodedPW = CryptoJS.SHA256(this.password).toString();
      this.authService.signIn(this.email, encodedPW, this.location)
     .subscribe(
       (val) => {

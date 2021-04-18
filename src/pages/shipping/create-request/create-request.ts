@@ -1,9 +1,13 @@
+import { Request } from './../../../model/Request';
 import { ProofService } from './../../../services/proof/ProofService';
 import { UserAccount } from './../../../config/UserAccount';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Item } from '../../../model/ItemList';
-import { Request } from '../../../model/Request';
+import { rootRenderNodes } from '@angular/core/src/view';
+// import sha256 from 'crypto-js/sha256';
+// import aes from 'crypto-js/aes';
+import CryptoJS from 'crypto-js';
 
 type CreateRequestResult = {
   requestId: string;
@@ -34,26 +38,37 @@ export class CreateRequestPage {
     this.proverLat = this.navParams.get("currentLat");
     this.proverLng = this.navParams.get("currentLng");
     this.item = this.navParams.get("item");
-    this.preHx = this.item.route.getLatestBlockHx();
+    //this.preHx = this.item.route.getLatestBlockHx();
   }
 
   createRequest() {
     if(this.password != this.userAcc.getPassword()){
       const alert = this.alertCtrl.create({
         cssClass: 'alertClass',
-        subTitle: 'The item amount cannot be less than one.',
+        subTitle: 'Please enter the correct password.',
         buttons: ['OK']
       })
       alert.present();
       return;
     }
+    //let encodedPW = sha256(this.userAcc.getPassword());
+    let encodedPW = CryptoJS.SHA256(this.password).toString();
+    let r: Request = new Request(this.userAcc.requestCount, this.item.shipmentId, this.userAcc.getAddress(), this.proverLat, this.proverLng, new Date);
+    this.userAcc.requests.push(r);
+
     this.proofService.createRequest(this.item.shipmentId, this.proverLat, this.proverLng
-      , this.item.seller, this.preHx, this.password)
+      , this.item.seller, this.preHx, encodedPW)
       .subscribe(
         (val) => {
             console.log("createRequest call successful value returned in body", val);
             let retval: CreateRequestResult = JSON.parse(JSON.stringify(val));
-            this.item.route.requests.push(new Request(retval.requestId, retval.hashCode, this.preHx, this.item.seller, this.proverLat, this.proverLng));
+            //this.item.route.requests.push(new Request(retval.requestId, retval.hashCode, this.preHx, this.item.seller, this.proverLat, this.proverLng));
+            const alert = this.alertCtrl.create({
+              cssClass: 'alertClass',
+              subTitle: 'The request has been created',
+              buttons: ['OK']
+            })
+            alert.present();
             this.navCtrl.setRoot("ShipLocationPage", {
               "item": this.item
             });

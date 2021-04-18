@@ -14,10 +14,8 @@
   <ion-list *ngFor="let response of responses">
     <div class="item-list">
       <div class="item-info1">
-        <ion-label text-wrap>Witness Address: {{response.witnessAddr}}</ion-label>
+        <ion-label text-wrap>Witness Address: {{response.witnessAddr.substring(0, 12)}}...</ion-label>
         <ion-label text-wrap>Timestamp: {{response.timestamp}}</ion-label>
-      </div>
-      <div class="item-info2">
         <ion-label text-wrap>Witness Latitude: {{response.witnessLat}}</ion-label>
         <ion-label text-wrap>Witness Longitude: {{response.witnessLng}}</ion-label>
       </div>

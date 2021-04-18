@@ -1,10 +1,13 @@
+import { Item } from './../../model/ItemList';
+import { UserAccount } from './../../config/UserAccount';
+import { Request } from './../../model/Request';
 import { ProofService } from './../../services/proof/ProofService';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 type GetRequestsResult = {
   result: any,
-  hasError: string,
+  hasError: boolean,
   count: number
 }
 
@@ -15,13 +18,6 @@ type RequestResult = {
   timestamps: string[]
 }
 
-type Request = {
-  requestId: string,
-  sellerLat: string,
-  sellerLng: string,
-  timestamp: string
-}
-
 @IonicPage()
 @Component({
   selector: 'page-request-list',
@@ -29,17 +25,20 @@ type Request = {
 })
 export class RequestListPage {
 
-  requests: Request[];
+  requests: Request[] = new Array<Request>();
   shipmentId: string;
   count: number = 0;
+  item: Item;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private proofServ: ProofService) {
+    private proofServ: ProofService, protected userAcc: UserAccount) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RequestListPage');
     this.shipmentId = this.navParams.get("shipmentId");
+    this.item = this.navParams.get("item");
+    this.loadRequests();
   }
 
   loadRequests() {
@@ -48,17 +47,18 @@ export class RequestListPage {
       (val) => {
         console.log("getRequests call successful value returned in body", val);
         let retval: GetRequestsResult = JSON.parse(JSON.stringify(val));
-        if(retval.hasError == "false") {
+        console.log("retval.hasError: "+retval.hasError);
+        if(!retval.hasError) {
           this.count = retval.count;
           let requestResult: RequestResult = JSON.parse(JSON.stringify(retval.result));
           for(let i=0;i<this.count;i++) {
-            let r: Request;
-            r.requestId = requestResult.requestIds[i];
-            r.sellerLat = requestResult.sellerLats[i];
-            r.sellerLng = requestResult.sellerLngs[i];
-            r.timestamp = requestResult.timestamps[i];
+            console.log("requestResult.requestIds[i]: "+requestResult.requestIds[i]);
+            let r: Request = new Request(requestResult.requestIds[i], this.shipmentId, this.userAcc.getAddress(),
+            requestResult.sellerLats[i], requestResult.sellerLngs[i], requestResult.timestamps[i]);
             this.requests.push(r);
           }
+          console.log("this.requests: "+this.requests);
+          console.log("this.requests.length: "+this.requests.length);
         }
       },
       response => {
@@ -72,6 +72,13 @@ export class RequestListPage {
   checkResponses(request: Request){
     this.navCtrl.push("ResponseListPage", {
       "requestId": request.requestId
+    })
+  }
+
+  checkDetails(request: Request) {
+    this.navCtrl.push("CheckRequestPage", {
+      "requestId": request.requestId,
+      "item": this.item
     })
   }
 }

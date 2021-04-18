@@ -1,22 +1,26 @@
 export class Request {
-  requestId: string;
-  hx: string;
+  requestId: number;
+  shipmentId: number;
+  signedHx: string;
   preHx: string;
   broadCasted: boolean;
-  prover: string;
+  proverAddr: string;
   proverLat: string;
   proverLng: string;
   responses: Response[];
+  timestamp: Date;
+  finished: boolean;
 
-  constructor(requestId, hx, preHx, prover ,proverLat, proverLng) {
+  constructor(requestId, shipmentId, prover ,proverLat, proverLng, timestamp) {
     this.requestId = requestId;
-    this.hx = hx;
-    this.preHx = preHx;
-    this.prover = prover;
+    this.shipmentId = shipmentId
+    this.proverAddr = prover;
     this.proverLat = proverLat;
     this.proverLng = proverLng;
     this.broadCasted = false;
     this.responses = new Array<Response>();
+    this.timestamp = timestamp;
+    this.finished = false;
   }
 
   isActive() {
